@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Position, GameState, Piece, PieceType, Card } from '../types/game';
 import { getPossibleMoves, isPieceAt, isValidMove, findPieceAt } from '../utils/gameLogic';
@@ -289,13 +290,13 @@ export const GameBoard: React.FC<GameBoardProps> = ({
                 
                 {hasBall && (
                   <div className={`
-                    absolute inset-0 flex items-center justify-center
-                    ${piece ? 'opacity-70' : 'opacity-100'}
+                    absolute cursor-pointer
+                    ${piece ? 'top-1 right-1' : 'inset-0 flex items-center justify-center'}
                   `}>
                     <div className={`
-                      w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-orange-600
-                      shadow-lg border-2 border-orange-800 cursor-pointer
-                      ${gameState.ballSelected ? 'ring-4 ring-blue-400 animate-pulse' : ''}
+                      ${piece ? 'w-4 h-4' : 'w-5 h-5'} rounded-full bg-gradient-to-br from-orange-400 to-orange-600
+                      shadow-lg border-2 border-orange-800
+                      ${gameState.ballSelected ? 'ring-2 ring-blue-400 animate-pulse' : ''}
                       hover:scale-110 transition-transform
                     `} />
                   </div>
