@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { Position, GameState, Piece, PieceType, Card } from '../types/game';
 import { getPossibleMoves, isPieceAt, isValidMove, findPieceAt } from '../utils/gameLogic';
@@ -141,6 +142,8 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   };
 
   const handlePush = (pusher: Piece, pushed: Piece) => {
+    console.log('Push initiated:', { pusher: pusher.id, pushed: pushed.id });
+    
     // Calculate push direction
     const direction = {
       row: pushed.position.row - pusher.position.row,
@@ -179,46 +182,60 @@ export const GameBoard: React.FC<GameBoardProps> = ({
       pushDestination.col = alternatives[0].col;
     }
 
+    // Store the pushed piece's original position for the pusher to move to
+    const pusherNewPosition = { ...pushed.position };
+    
     // Handle yellow card logic
     const wasPushedHoldingBall = gameState.ballCarrier === pushed.id;
     const isPusherHoldingBall = gameState.ballCarrier === pusher.id;
 
+    console.log('Push details:', { 
+      pusherNewPosition, 
+      pushDestination, 
+      wasPushedHoldingBall, 
+      isPusherHoldingBall 
+    });
+
     setGameState(prev => {
       const updatedPieces = prev.pieces.map(piece => {
         if (piece.id === pushed.id) {
+          // Move pushed piece to push destination
           return { ...piece, position: pushDestination };
         }
-        if (piece.id === pusher.id && !isPusherHoldingBall) {
-          // Add yellow card
-          const newCards = [...piece.cards, { type: 'yellow' as Card['type'], turn: 1 }];
-          if (newCards.filter(card => card.type === 'yellow').length >= 2) {
-            // Red card - remove piece
-            return null;
+        if (piece.id === pusher.id) {
+          // Move pusher to pushed piece's original position
+          if (!isPusherHoldingBall) {
+            // Add yellow card if pusher wasn't holding ball
+            const newCards = [...piece.cards, { type: 'yellow' as Card['type'], turn: 1 }];
+            if (newCards.filter(card => card.type === 'yellow').length >= 2) {
+              // Red card - remove piece
+              return null;
+            }
+            return { ...piece, position: pusherNewPosition, cards: newCards };
           }
-          return { ...piece, cards: newCards };
+          return { ...piece, position: pusherNewPosition };
         }
         return piece;
       }).filter(Boolean) as Piece[];
 
+      const newBallPosition = wasPushedHoldingBall ? pushDestination : 
+                             isPusherHoldingBall ? pusherNewPosition : prev.ballPosition;
+      
+      const newBallCarrier = wasPushedHoldingBall ? pushed.id :
+                            isPusherHoldingBall ? pusher.id : prev.ballCarrier;
+
+      console.log('New ball state:', { newBallPosition, newBallCarrier });
+
       return {
         ...prev,
         pieces: updatedPieces,
-        ballPosition: wasPushedHoldingBall ? pushDestination : prev.ballPosition,
-        ballCarrier: wasPushedHoldingBall ? pushed.id : prev.ballCarrier,
+        ballPosition: newBallPosition,
+        ballCarrier: newBallCarrier,
         selectedPiece: null,
         validMoves: [],
         lastPushedPiece: pushed.id,
       };
     });
-
-    // Return ball to pushed piece if they weren't holding it
-    if (!wasPushedHoldingBall && !isPusherHoldingBall) {
-      setGameState(prev => ({
-        ...prev,
-        ballPosition: pushDestination,
-        ballCarrier: pushed.id,
-      }));
-    }
 
     switchTurn();
   };
@@ -330,3 +347,4 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     </div>
   );
 };
+
