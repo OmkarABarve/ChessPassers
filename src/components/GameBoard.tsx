@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Position, GameState, Piece, PieceType, Card } from '../types/game';
 import { getPossibleMoves, isPieceAt, isValidMove, findPieceAt } from '../utils/gameLogic';
@@ -23,9 +22,10 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
     const clickedPosition = { row, col };
     const clickedPiece = findPieceAt(gameState.pieces, clickedPosition);
+    const isBallPosition = gameState.ballPosition.row === row && gameState.ballPosition.col === col;
 
     // If ball is selected for passing
-    if (gameState.ballSelected && gameState.selectedPiece) {
+    if (gameState.ballSelected) {
       const ballCarrier = gameState.pieces.find(p => p.id === gameState.ballCarrier);
       if (ballCarrier && ballCarrier.color === gameState.currentPlayer) {
         const possibleMoves = getPossibleMoves(ballCarrier, gameState.pieces);
@@ -52,6 +52,30 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           }
           return;
         }
+      }
+      
+      // If clicking elsewhere while ball is selected, deselect ball
+      setGameState(prev => ({
+        ...prev,
+        ballSelected: false,
+        selectedPiece: null,
+        validMoves: [],
+      }));
+      return;
+    }
+
+    // If clicking on ball to select it for passing
+    if (isBallPosition && gameState.ballCarrier) {
+      const ballCarrier = gameState.pieces.find(p => p.id === gameState.ballCarrier);
+      if (ballCarrier && ballCarrier.color === gameState.currentPlayer) {
+        const possibleMoves = getPossibleMoves(ballCarrier, gameState.pieces);
+        setGameState(prev => ({
+          ...prev,
+          selectedPiece: ballCarrier,
+          ballSelected: true,
+          validMoves: possibleMoves,
+        }));
+        return;
       }
     }
 
@@ -95,7 +119,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
       }
     }
 
-    // Select piece or ball
+    // Select piece
     if (clickedPiece && clickedPiece.color === gameState.currentPlayer) {
       const possibleMoves = getPossibleMoves(clickedPiece, gameState.pieces);
       setGameState(prev => ({
@@ -104,23 +128,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         ballSelected: false,
         validMoves: possibleMoves,
       }));
-    } else if (
-      gameState.ballPosition.row === row && 
-      gameState.ballPosition.col === col &&
-      gameState.ballCarrier &&
-      gameState.pieces.find(p => p.id === gameState.ballCarrier)?.color === gameState.currentPlayer
-    ) {
-      // Select ball for passing
-      const ballCarrier = gameState.pieces.find(p => p.id === gameState.ballCarrier);
-      if (ballCarrier) {
-        const possibleMoves = getPossibleMoves(ballCarrier, gameState.pieces);
-        setGameState(prev => ({
-          ...prev,
-          selectedPiece: ballCarrier,
-          ballSelected: true,
-          validMoves: possibleMoves,
-        }));
-      }
     } else {
       // Deselect
       setGameState(prev => ({
@@ -287,8 +294,9 @@ export const GameBoard: React.FC<GameBoardProps> = ({
                   `}>
                     <div className={`
                       w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-orange-600
-                      shadow-lg border-2 border-orange-800
+                      shadow-lg border-2 border-orange-800 cursor-pointer
                       ${gameState.ballSelected ? 'ring-4 ring-blue-400 animate-pulse' : ''}
+                      hover:scale-110 transition-transform
                     `} />
                   </div>
                 )}
@@ -298,9 +306,25 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         )}
       </div>
       
-      <div className="mt-4 text-center text-sm text-gray-600">
-        Current turn: <span className="font-semibold capitalize">{gameState.currentPlayer}</span>
-        {gameState.ballSelected && <span className="ml-2 text-blue-600">⚽ Ball selected for passing</span>}
+      <div className="mt-4 text-center text-sm text-gray-600 space-y-2">
+        <div>
+          Current turn: <span className="font-semibold capitalize">{gameState.currentPlayer}</span>
+        </div>
+        
+        <div className="flex justify-center items-center space-x-4">
+          <div className="bg-gray-100 px-3 py-1 rounded-lg">
+            <span className="text-xs font-medium text-gray-700">Ball Selected: </span>
+            <span className={`font-bold ${gameState.ballSelected ? 'text-green-600' : 'text-red-600'}`}>
+              {gameState.ballSelected ? 'YES' : 'NO'}
+            </span>
+          </div>
+          
+          {gameState.ballSelected && (
+            <div className="text-blue-600 font-medium">
+              ⚽ Click to pass the ball
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
