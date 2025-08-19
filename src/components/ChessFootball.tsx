@@ -9,7 +9,7 @@ const INITIAL_PIECES: Piece[] = [
   // White pieces
   { id: 'w-king', type: 'king', color: 'white', position: { row: 0, col: 3 }, cards: [] },
   { id: 'w-bishop1', type: 'bishop', color: 'white', position: { row: 1, col: 2 }, cards: [] },
-  { id: 'w-bishop2', type: 'bishop', color: 'white', position: { row: 1, col: 3 }, cards: [] },
+  { id: 'w-bishop2', type: 'bishop', color: 'white', position: { row: 1, col: 4 }, cards: [] },
   { id: 'w-knight1', type: 'knight', color: 'white', position: { row: 2, col: 1 }, cards: [] },
   { id: 'w-knight2', type: 'knight', color: 'white', position: { row: 2, col: 5 }, cards: [] },
   { id: 'w-rook1', type: 'rook', color: 'white', position: { row: 1, col: 0 }, cards: [] },
@@ -19,7 +19,7 @@ const INITIAL_PIECES: Piece[] = [
   // Black pieces
   { id: 'b-king', type: 'king', color: 'black', position: { row: 6, col: 3 }, cards: [] },
   { id: 'b-bishop1', type: 'bishop', color: 'black', position: { row: 5, col: 2 }, cards: [] },
-  { id: 'b-bishop2', type: 'bishop', color: 'black', position: { row: 5, col: 3 }, cards: [] },
+  { id: 'b-bishop2', type: 'bishop', color: 'black', position: { row: 5, col: 4 }, cards: [] },
   { id: 'b-knight1', type: 'knight', color: 'black', position: { row: 4, col: 1 }, cards: [] },
   { id: 'b-knight2', type: 'knight', color: 'black', position: { row: 4, col: 5 }, cards: [] },
   { id: 'b-rook1', type: 'rook', color: 'black', position: { row: 5, col: 0 }, cards: [] },
