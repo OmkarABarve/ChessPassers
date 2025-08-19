@@ -17,14 +17,14 @@ const INITIAL_PIECES: Piece[] = [
   { id: 'w-queen', type: 'queen', color: 'white', position: { row: 3, col: 3 }, cards: [] },
   
   // Black pieces
-  { id: 'b-king', type: 'king', color: 'black', position: { row: 6, col: 3 }, cards: [] },
-  { id: 'b-bishop1', type: 'bishop', color: 'black', position: { row: 5, col: 2 }, cards: [] },
-  { id: 'b-bishop2', type: 'bishop', color: 'black', position: { row: 5, col: 4 }, cards: [] },
-  { id: 'b-knight1', type: 'knight', color: 'black', position: { row: 4, col: 1 }, cards: [] },
-  { id: 'b-knight2', type: 'knight', color: 'black', position: { row: 4, col: 5 }, cards: [] },
-  { id: 'b-rook1', type: 'rook', color: 'black', position: { row: 5, col: 0 }, cards: [] },
-  { id: 'b-rook2', type: 'rook', color: 'black', position: { row: 5, col: 6 }, cards: [] },
-  { id: 'b-queen', type: 'queen', color: 'black', position: { row: 3, col: 3 }, cards: [] },
+  { id: 'b-king', type: 'king', color: 'black', position: { row: 7, col: 3 }, cards: [] },
+  { id: 'b-bishop1', type: 'bishop', color: 'black', position: { row: 6, col: 2 }, cards: [] },
+  { id: 'b-bishop2', type: 'bishop', color: 'black', position: { row: 6, col: 4 }, cards: [] },
+  { id: 'b-knight1', type: 'knight', color: 'black', position: { row: 5, col: 1 }, cards: [] },
+  { id: 'b-knight2', type: 'knight', color: 'black', position: { row: 5, col: 5 }, cards: [] },
+  { id: 'b-rook1', type: 'rook', color: 'black', position: { row: 6, col: 0 }, cards: [] },
+  { id: 'b-rook2', type: 'rook', color: 'black', position: { row: 6, col: 6 }, cards: [] },
+  { id: 'b-queen', type: 'queen', color: 'black', position: { row: 4, col: 3 }, cards: [] },
 ];
 
 const ChessFootball: React.FC = () => {
@@ -83,7 +83,7 @@ const ChessFootball: React.FC = () => {
 
   const checkGoal = useCallback((position: Position): boolean => {
     const goalCols = [2, 3, 4]; // columns c, d, e (0-indexed)
-    return (position.row === -1 || position.row === 7) && goalCols.includes(position.col);
+    return (position.row === -1 || position.row === 8) && goalCols.includes(position.col);
   }, []);
 
   const scoreGoal = useCallback((scoringPlayer: 'white' | 'black') => {

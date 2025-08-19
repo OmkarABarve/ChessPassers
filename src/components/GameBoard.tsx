@@ -162,7 +162,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     };
 
     // Check if push destination is valid
-    if (pushDestination.row < 0 || pushDestination.row > 6 || 
+    if (pushDestination.row < 0 || pushDestination.row > 7 || 
         pushDestination.col < 0 || pushDestination.col > 6 ||
         isPieceAt(gameState.pieces, pushDestination)) {
       // Find alternative push location
@@ -172,7 +172,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         { row: pushed.position.row, col: pushed.position.col + 1 },
         { row: pushed.position.row, col: pushed.position.col - 1 },
       ].filter(pos => 
-        pos.row >= 0 && pos.row <= 6 && 
+        pos.row >= 0 && pos.row <= 7 && 
         pos.col >= 0 && pos.col <= 6 && 
         !isPieceAt(gameState.pieces, pos)
       );
@@ -256,13 +256,13 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   };
 
   const isGoalZone = (row: number, col: number): boolean => {
-    return (row === 0 || row === 6) && [2, 3, 4].includes(col);
+    return (row === 0 || row === 7) && [2, 3, 4].includes(col);
   };
 
   return (
     <div className="bg-white rounded-lg shadow-xl p-6">
-      <div className="grid grid-cols-7 gap-1 aspect-square max-w-2xl mx-auto">
-        {Array.from({ length: 7 }, (_, row) =>
+      <div className="grid grid-cols-7 gap-1 max-w-2xl mx-auto" style={{ aspectRatio: '7/8' }}>
+        {Array.from({ length: 8 }, (_, row) =>
           Array.from({ length: 7 }, (_, col) => {
             const piece = findPieceAt(gameState.pieces, { row, col });
             const hasBall = gameState.ballPosition.row === row && gameState.ballPosition.col === col;
