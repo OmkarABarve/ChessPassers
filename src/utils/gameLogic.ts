@@ -15,7 +15,7 @@ export const findPieceAt = (pieces: Piece[], position: Position): Piece | null =
 
 export const isValidMove = (from: Position, to: Position, pieces: Piece[]): boolean => {
   // Check bounds
-  if (to.row < 0 || to.row > 7 || to.col < 0 || to.col > 7) return false;
+  if (to.row < 0 || to.row > 6 || to.col < 0 || to.col > 6) return false;
   
   // Check if destination is occupied by friendly piece
   const targetPiece = findPieceAt(pieces, to);
@@ -83,9 +83,9 @@ export const getPossibleMoves = (piece: Piece, pieces: Piece[]): Position[] => {
 
   // Add goal positions for ball passing
   if (piece.color === 'white') {
-    // Can score on black's goal (row 8, cols 2,3,4)
+    // Can score on black's goal (row 7, cols 2,3,4)
     [2, 3, 4].forEach(goalCol => {
-      moves.push({ row: 8, col: goalCol });
+      moves.push({ row: 7, col: goalCol });
     });
   } else {
     // Can score on white's goal (row -1, cols 2,3,4)
@@ -110,10 +110,10 @@ const getRookMoves = (piece: Piece, pieces: Piece[]): Position[] => {
   ];
 
   directions.forEach(({ dr, dc }) => {
-    for (let i = 1; i < 8; i++) {
+    for (let i = 1; i < 7; i++) {
       const newPos = { row: row + dr * i, col: col + dc * i };
       
-      if (newPos.row < 0 || newPos.row > 7 || newPos.col < 0 || newPos.col > 7) break;
+      if (newPos.row < 0 || newPos.row > 6 || newPos.col < 0 || newPos.col > 6) break;
       
       const pieceAtPos = findPieceAt(pieces, newPos);
       if (pieceAtPos) {
@@ -143,10 +143,10 @@ const getBishopMoves = (piece: Piece, pieces: Piece[]): Position[] => {
   ];
 
   directions.forEach(({ dr, dc }) => {
-    for (let i = 1; i < 8; i++) {
+    for (let i = 1; i < 7; i++) {
       const newPos = { row: row + dr * i, col: col + dc * i };
       
-      if (newPos.row < 0 || newPos.row > 7 || newPos.col < 0 || newPos.col > 7) break;
+      if (newPos.row < 0 || newPos.row > 6 || newPos.col < 0 || newPos.col > 6) break;
       
       const pieceAtPos = findPieceAt(pieces, newPos);
       if (pieceAtPos) {
