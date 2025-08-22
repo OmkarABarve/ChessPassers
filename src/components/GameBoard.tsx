@@ -319,14 +319,28 @@ export const GameBoard: React.FC<GameBoardProps> = ({
                 )}
                 
                 {hasBall && (
-                  <div className={`
-                    absolute cursor-pointer
-                    ${piece ? 'top-1 right-1' : 'inset-0 flex items-center justify-center'}
-                  `}>
+                  <div 
+                    className={`
+                      absolute cursor-pointer
+                      ${piece ? 'top-1 right-1' : 'inset-0 flex items-center justify-center'}
+                    `}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (piece && gameState.ballCarrier === piece.id && piece.color === gameState.currentPlayer) {
+                        const possibleMoves = getPossibleMoves(piece, gameState.pieces);
+                        setGameState(prev => ({
+                          ...prev,
+                          selectedPiece: piece,
+                          ballSelected: true,
+                          validMoves: possibleMoves,
+                        }));
+                      }
+                    }}
+                  >
                     <div className={`
                       ${piece ? 'w-4 h-4' : 'w-5 h-5'} rounded-full bg-gradient-to-br from-orange-400 to-orange-600
                       shadow-lg border-2 border-orange-800
-                      ${gameState.ballSelected ? 'ring-2 ring-blue-400 animate-pulse' : ''}
+                      ${gameState.ballSelected && gameState.ballCarrier === piece?.id ? 'ring-2 ring-blue-400 animate-pulse' : ''}
                       hover:scale-110 transition-transform
                     `} />
                   </div>
