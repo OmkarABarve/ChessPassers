@@ -81,6 +81,19 @@ export const GameBoard: React.FC<GameBoardProps> = ({
       }
     }
 
+    // If clicking on piece that has the ball, select it for passing
+    if (clickedPiece && clickedPiece.id === gameState.ballCarrier && 
+        clickedPiece.color === gameState.currentPlayer) {
+      const possibleMoves = getPossibleMoves(clickedPiece, gameState.pieces);
+      setGameState(prev => ({
+        ...prev,
+        selectedPiece: clickedPiece,
+        ballSelected: true,
+        validMoves: possibleMoves,
+      }));
+      return;
+    }
+
     // If a piece is selected for moving
     if (gameState.selectedPiece && !gameState.ballSelected) {
       // Check if clicking on opponent piece (push)
